@@ -178,6 +178,7 @@ namespace ProyectoFinalProgIII.Controllers
 
                 producto.Cantidad = (int.Parse(producto.Cantidad) - int.Parse(facturacion.Cantidad)).ToString();
                 var servicios = _context.Servicios.Where(p => p.ServiciosId.Equals(facturacion.ServiciosId)).FirstOrDefault();
+                var clientes = _context.Clientes.Where(p => p.ClienteId.Equals(facturacion.ClienteId)).FirstOrDefault();
 
                 //Vendidos Productos
                 if (producto.CantVendidos == null)
@@ -206,6 +207,18 @@ namespace ProyectoFinalProgIII.Controllers
                 // Dar ITBS Servicios
                 //facturacion.Itbis = ((int.Parse(facturacion.Cantidad) * int.Parse(servicios.Valor)) * 0.18).ToString();
 
+                //Sumar Comrpas
+                if (clientes.CantCompras == null)
+                {
+                    clientes.CantCompras = "0";
+                    clientes.CantCompras = (int.Parse(clientes.CantCompras) + int.Parse("1")).ToString();
+                }
+                else
+                {
+                    clientes.CantCompras = (int.Parse(clientes.CantCompras) + int.Parse("1")).ToString();
+                }
+
+                _context.Clientes.Update(clientes);
                 _context.Productos.Update(producto);
                 await _context.SaveChangesAsync();
 
@@ -272,8 +285,19 @@ namespace ProyectoFinalProgIII.Controllers
                 return NotFound();
             }
 
-            var facturacion = await _context.Facturacion
-                .FirstOrDefaultAsync(m => m.FacturacionId == id);
+            var facturacion = (await _context.Facturacion.Where(f => f.FacturacionId == id).Select(s => new FacturaListVM
+            {
+                Cantidad = s.Cantidad,
+                FacturacionId = s.FacturacionId,
+                Itbis = s.Itbis,
+                NombreCliente = _context.Clientes.Where(c => c.ClienteId == s.ClienteId).FirstOrDefault().Nombre,
+                NombreProducto = _context.Productos.Where(c => c.ProductosId == s.ProductosId).FirstOrDefault().NombreP,
+                NombreServicio = _context.Servicios.Where(c => c.ServiciosId == s.ServiciosId).FirstOrDefault().NombreS,
+                NombreUsuario = _context.Usuarios.Where(c => c.Id.Equals(UtilityModel.UserId.ToString())).FirstOrDefault().Nombre,
+                TipoFactura = s.TipoFactura
+
+            }).ToListAsync());
+
             if (facturacion == null)
             {
                 return NotFound();
@@ -293,6 +317,7 @@ namespace ProyectoFinalProgIII.Controllers
 
             var producto = _context.Productos.Where(p => p.ProductosId.Equals(facturacion.ProductosId)).FirstOrDefault();
             var servicios = _context.Servicios.Where(p => p.ServiciosId.Equals(facturacion.ServiciosId)).FirstOrDefault();
+            var clientes = _context.Clientes.Where(p => p.ClienteId.Equals(facturacion.ClienteId)).FirstOrDefault();
             producto.Cantidad = (int.Parse(producto.Cantidad)+int.Parse(facturacion.Cantidad)).ToString();
             
             //Productos Vendidos Borrar
@@ -315,6 +340,18 @@ namespace ProyectoFinalProgIII.Controllers
             {
                 servicios.CantVendidos = (int.Parse(servicios.CantVendidos) - int.Parse(facturacion.Cantidad)).ToString();
             }
+
+            if (clientes.CantCompras == null)
+            {
+                clientes.CantCompras = "0";
+                clientes.CantCompras = (int.Parse(clientes.CantCompras) - int.Parse("1")).ToString();
+            }
+            else
+            {
+                clientes.CantCompras = (int.Parse(clientes.CantCompras) - int.Parse("1")).ToString();
+            }
+
+
 
             _context.Productos.Update(producto);
             _context.SaveChanges();
