@@ -66,7 +66,7 @@ namespace ProyectoFinalProgIII
                 endpoints.MapRazorPages();
             });
 
-            Rotativa.AspNetCore.RotativaConfiguration.Setup(env.WebRootPath,"../Rotativa");
+            Rotativa.AspNetCore.RotativaConfiguration.Setup(env.WebRootPath,"Rotativa");
         }
     }
 }
