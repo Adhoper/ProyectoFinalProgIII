@@ -14,8 +14,8 @@ namespace ProyectoFinalProgIII.Data
         public DbSet<Clientes> Clientes { get; set; }
         public DbSet<Facturacion> Facturacion { get; set; }
         public DbSet<Productos> Productos { get; set; }
-
         public DbSet<Servicios> Servicios { get; set; }
+        public DbSet<FacturacionProductos> FacturacionProductos { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -73,11 +73,10 @@ namespace ProyectoFinalProgIII.Data
         public Guid FacturacionId { get; set; }
 
         public string TipoFactura { get; set; }
-
         public string Cantidad { get; set; }
-
-        public string Itbis { get; set; }
-
+        public decimal Itbis { get; set; }
+        public decimal Precio { get; set; }
+        public Clientes Cliente { get; set; }
         public Guid ClienteId { get; set; }
 
         public Guid UsuarioId { get; set; }
@@ -96,6 +95,17 @@ namespace ProyectoFinalProgIII.Data
 
         public string CantVendidos { get; set; }
 
+    }
+
+    public class FacturacionProductos
+    {
+
+        public Guid Id { get; set; }
+        public Guid ProductosId { get; set; }
+        public Guid FacturacionId { get; set; }
+        public Productos Productos { get; set; }
+        public Facturacion Facturacion { get; set; }
+        public decimal PrecioTotal { get; set; }
     }
 
     public class Servicios

@@ -15,25 +15,26 @@
 
 @foreach (var item in Model)
 {
-    <div style="font-size:26px;">
+<div style="font-size:26px;">
 
-        <br />
+    <br />
 
-        <strong>@Html.DisplayNameFor(model => model.TipoFactura):</strong> @Html.DisplayFor(modelItem => item.TipoFactura)<br /><br />
+    <strong>@Html.DisplayNameFor(model => model.TipoFactura):</strong> @Html.DisplayFor(modelItem => item.TipoFactura)<br /><br />
 
 
-        <strong>@Html.DisplayNameFor(model => model.Cantidad):</strong> @Html.DisplayFor(model => item.Cantidad)<br /><br />
+    <strong>@Html.DisplayNameFor(model => model.Cantidad):</strong> @Html.DisplayFor(model => item.Cantidad)<br /><br />
 
-        <strong>@Html.DisplayNameFor(model => model.Itbis):</strong> @Html.DisplayFor(model => item.Itbis)<br /><br />
+    <strong>@Html.DisplayNameFor(model => model.Itbis):</strong> @Html.DisplayFor(model => item.Itbis)<br /><br />
+    <strong>@Html.DisplayNameFor(model => model.Precio):</strong> @Html.DisplayFor(model => item.Precio)<br /><br />
 
-        <strong>Cliente:</strong>  @Html.DisplayFor(model => item.NombreCliente)<br /><br />
+    <strong>Cliente:</strong>  @Html.DisplayFor(model => item.NombreCliente)<br /><br />
 
-        <strong>Usuario:</strong>  @Html.DisplayFor(model => item.NombreUsuario)<br /><br />
+    <strong>Usuario:</strong>  @Html.DisplayFor(model => item.NombreUsuario)<br /><br />
 
-        <strong>Producto:</strong> @Html.DisplayFor(model => item.NombreProducto)<br /><br />
+    <strong>Producto:</strong> @Html.DisplayFor(model => item.NombreProducto)<br /><br />
 
-        <strong>Servicio:</strong> @Html.DisplayFor(model => item.NombreServicio)<br />
+    <strong>Servicio:</strong> @Html.DisplayFor(model => item.NombreServicio)<br />
 
-    </div>
+</div>
 
 }

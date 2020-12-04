@@ -1,0 +1,70 @@
+﻿@model IEnumerable<ProyectoFinalProgIII.VIewModels.FacturaListVM>
+@using Microsoft.AspNetCore.Identity
+@using ProyectoFinalProgIII.Data;
+@inject SignInManager<Usuarios> SignInManager
+@inject UserManager<Usuarios> UserManager
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@if (SignInManager.IsSignedIn(User))
+{
+
+    <h1 class="text-center">Facturacion</h1>
+
+    <p>
+        <a class="btn btn-primary" asp-action="Create">Crear una Nueva Factura</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+               
+               
+               
+                
+               
+                <th>
+                    Producto
+                </th>
+                <th>
+                    Servicios
+                </th>
+                <th>
+                    Cantidad
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                   
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NombreProducto)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NombreServicio)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Cantidad)
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.FacturacionId">Modificar</a>
+                            <a class="btn btn-success" asp-action="Details" asp-route-id="@item.FacturacionId">Detalles</a>
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.FacturacionId">Anular</a>
+                            <a class="btn btn-secondary" target="_blank" asp-action="PDF" asp-route-id="@item.FacturacionId">Imprimir</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+else
+{
+
+}

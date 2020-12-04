@@ -1,0 +1,47 @@
+﻿@model ProyectoFinalProgIII.VIewModels.FacturaListVM
+@using Microsoft.AspNetCore.Identity
+@using ProyectoFinalProgIII.Data;
+@inject SignInManager<Usuarios> SignInManager
+@inject UserManager<Usuarios> UserManager
+
+@{
+    ViewData["Title"] = "Productos mas vendidos";
+}
+
+@if (SignInManager.IsSignedIn(User))
+{
+
+    <h1 class="text-center">Productos Mas Vendidos</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Producto
+                </th>
+                <th>
+                    Precio
+                </th>
+                <th>
+
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Facturaciones)
+            {
+                <tr>
+
+                    <td>
+                        @item.ProductosId
+                    </td>
+                    <td>
+                        @item.Precio
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
