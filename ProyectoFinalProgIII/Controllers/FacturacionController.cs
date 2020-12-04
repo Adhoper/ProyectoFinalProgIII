@@ -1,29 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProyectoFinalProgIII.Data;
 using ProyectoFinalProgIII.Models;
 using ProyectoFinalProgIII.VIewModels;
 using Rotativa.AspNetCore;
-
+using ProyectoFinalProgIII.Services;
 namespace ProyectoFinalProgIII.Controllers
 {
     [Authorize]
     public class FacturacionController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IServices _services;
 
-        public FacturacionController(ApplicationDbContext context)
+        public FacturacionController(ApplicationDbContext context, IServices services)
         {
             _context = context;
+            _services = services;
+
         }
 
-        // GET: Facturacion
+    
+        [HttpGet]
+        public IActionResult ProductosMasVendidos()
+        {
+            var mostSold = _services.GetMostSold();
+            var model = new FacturaListVM
+            {
+                Facturaciones = mostSold
+            };
+            return View(model.Facturaciones);
+
+        }
+
         public async Task<IActionResult> Index()
         {
             var result = (await _context.Facturacion.Where(f => f.UsuarioId == Models.UtilityModel.UserId).Select(s => new FacturaListVM
@@ -31,6 +44,7 @@ namespace ProyectoFinalProgIII.Controllers
                 Cantidad = s.Cantidad,
                 FacturacionId = s.FacturacionId,
                 Itbis = s.Itbis,
+                Precio = s.Precio,
                 NombreCliente = _context.Clientes.Where(c => c.ClienteId == s.ClienteId).FirstOrDefault().Nombre,
                 NombreProducto = _context.Productos.Where(c => c.ProductosId == s.ProductosId).FirstOrDefault().NombreP,
                 NombreServicio = _context.Servicios.Where(c => c.ServiciosId == s.ServiciosId).FirstOrDefault().NombreS,
@@ -59,7 +73,7 @@ namespace ProyectoFinalProgIII.Controllers
 
         }
 
-        public IActionResult ChangeFacturaType([Bind("FacturacionId,TipoFactura,Cantidad,Itbis,ClienteId,UsuarioId,ProductosId,ServiciosId")] Facturacion facturacion)
+        public IActionResult ChangeFacturaType([Bind("FacturacionId,TipoFactura,Cantidad,Itbis,Precio,ClienteId,UsuarioId,ProductosId,ServiciosId")] Facturacion facturacion)
         {
             
 
@@ -89,6 +103,7 @@ namespace ProyectoFinalProgIII.Controllers
                 Cantidad = s.Cantidad,
                 FacturacionId = s.FacturacionId,
                 Itbis = s.Itbis,
+                Precio = s.Precio,
                 NombreCliente = _context.Clientes.Where(c => c.ClienteId == s.ClienteId).FirstOrDefault().Nombre,
                 NombreProducto = _context.Productos.Where(c => c.ProductosId == s.ProductosId).FirstOrDefault().NombreP,
                 NombreServicio = _context.Servicios.Where(c => c.ServiciosId == s.ServiciosId).FirstOrDefault().NombreS,
@@ -119,6 +134,7 @@ namespace ProyectoFinalProgIII.Controllers
                 Cantidad = s.Cantidad,
                 FacturacionId = s.FacturacionId,
                 Itbis = s.Itbis,
+                Precio = s.Precio,
                 NombreCliente = _context.Clientes.Where(c => c.ClienteId == s.ClienteId).FirstOrDefault().Nombre,
                 NombreProducto = _context.Productos.Where(c => c.ProductosId == s.ProductosId).FirstOrDefault().NombreP,
                 NombreServicio = _context.Servicios.Where(c => c.ServiciosId == s.ServiciosId).FirstOrDefault().NombreS,
@@ -161,7 +177,7 @@ namespace ProyectoFinalProgIII.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FacturacionId,TipoFactura,Cantidad,Itbis,ClienteId,UsuarioId,ProductosId,ServiciosId")] Facturacion facturacion)
+        public async Task<IActionResult> Create([Bind("FacturacionId,TipoFactura,Cantidad,Itbis,Precio,ClienteId,UsuarioId,ProductosId,ServiciosId")] Facturacion facturacion)
         {
             if (ModelState.IsValid)
             {
@@ -203,7 +219,8 @@ namespace ProyectoFinalProgIII.Controllers
                 }
 
                 //Dar ITBIS Producto
-                facturacion.Itbis = ((int.Parse(facturacion.Cantidad) * int.Parse(producto.Valor))*0.18).ToString();
+                facturacion.Itbis = Convert.ToDecimal(facturacion.Cantidad) * Convert.ToDecimal(producto.Valor) * 0.18m;
+                facturacion.Precio = Convert.ToDecimal(facturacion.Cantidad) * Convert.ToDecimal(producto.Valor);
                 // Dar ITBS Servicios
                 //facturacion.Itbis = ((int.Parse(facturacion.Cantidad) * int.Parse(servicios.Valor)) * 0.18).ToString();
 
@@ -247,7 +264,7 @@ namespace ProyectoFinalProgIII.Controllers
         // POST: Facturacion/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("FacturacionId,TipoFactura,Cantidad,Itbis,ClienteId,UsuarioId,ProductosId,ServiciosId")] Facturacion facturacion)
+        public async Task<IActionResult> Edit(Guid id, [Bind("FacturacionId,TipoFactura,Cantidad,Itbis,Precio,ClienteId,UsuarioId,ProductosId,ServiciosId")] Facturacion facturacion)
         {
             if (id != facturacion.FacturacionId)
             {
@@ -290,6 +307,7 @@ namespace ProyectoFinalProgIII.Controllers
                 Cantidad = s.Cantidad,
                 FacturacionId = s.FacturacionId,
                 Itbis = s.Itbis,
+                Precio = s.Precio,
                 NombreCliente = _context.Clientes.Where(c => c.ClienteId == s.ClienteId).FirstOrDefault().Nombre,
                 NombreProducto = _context.Productos.Where(c => c.ProductosId == s.ProductosId).FirstOrDefault().NombreP,
                 NombreServicio = _context.Servicios.Where(c => c.ServiciosId == s.ServiciosId).FirstOrDefault().NombreS,
