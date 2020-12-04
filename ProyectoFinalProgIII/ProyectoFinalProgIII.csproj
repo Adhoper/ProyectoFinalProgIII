@@ -20,6 +20,10 @@
     <Compile Remove="Migrations\20201202150215_FacturasCreate.Designer.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="C:\Users\Johan La Pampara\Desktop\Index.cshtml" Link="Index.cshtml" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.1" />
@@ -31,6 +35,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0-preview1.19506.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Rotativa.AspNetCore" Version="1.2.0-beta" />
@@ -38,7 +43,10 @@
 
 
   <ItemGroup>
-    <Folder Include="Rotativa\" />
+    <Folder Include="wwwroot\Rotativa\" />
   </ItemGroup>
+
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

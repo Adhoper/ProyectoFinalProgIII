@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoFinalProgIII.Data;
 
 namespace ProyectoFinalProgIII.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201204013229_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -204,11 +206,8 @@ namespace ProyectoFinalProgIII.Migrations
                     b.Property<Guid>("ClienteId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("Itbis")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Precio")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("Itbis")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("ProductosId")
                         .HasColumnType("uniqueidentifier");
@@ -227,30 +226,6 @@ namespace ProyectoFinalProgIII.Migrations
                     b.HasIndex("ClienteId");
 
                     b.ToTable("Facturacion");
-                });
-
-            modelBuilder.Entity("ProyectoFinalProgIII.Data.FacturacionProductos", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("FacturacionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("PrecioTotal")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("ProductosId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FacturacionId");
-
-                    b.HasIndex("ProductosId");
-
-                    b.ToTable("FacturacionProductos");
                 });
 
             modelBuilder.Entity("ProyectoFinalProgIII.Data.Productos", b =>
@@ -443,21 +418,6 @@ namespace ProyectoFinalProgIII.Migrations
                     b.HasOne("ProyectoFinalProgIII.Data.Clientes", "Cliente")
                         .WithMany()
                         .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ProyectoFinalProgIII.Data.FacturacionProductos", b =>
-                {
-                    b.HasOne("ProyectoFinalProgIII.Data.Facturacion", "Facturacion")
-                        .WithMany()
-                        .HasForeignKey("FacturacionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ProyectoFinalProgIII.Data.Productos", "Productos")
-                        .WithMany()
-                        .HasForeignKey("ProductosId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

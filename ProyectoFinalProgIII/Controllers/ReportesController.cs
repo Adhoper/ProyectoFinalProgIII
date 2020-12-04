@@ -5,7 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProyectoFinalProgIII.Data;
+using ProyectoFinalProgIII.Models;
+using ProyectoFinalProgIII.VIewModels;
 
 namespace ProyectoFinalProgIII.Controllers
 {
@@ -67,6 +70,41 @@ namespace ProyectoFinalProgIII.Controllers
             }
         }
 
+        public async Task<IActionResult> ProductosMasVendidos()
+        {
+            var result = (await _context.Facturacion.Where(f => f.UsuarioId == Models.UtilityModel.UserId).Select(s => new FacturaListVM
+            {
+                Cantidad = s.Cantidad,
+                FacturacionId = s.FacturacionId,
+                Itbis = s.Itbis,
+                Precio = s.Precio,
+                NombreCliente = _context.Clientes.Where(c => c.ClienteId == s.ClienteId).FirstOrDefault().Nombre,
+                NombreProducto = _context.Productos.Where(c => c.ProductosId == s.ProductosId).FirstOrDefault().NombreP,
+                NombreServicio = _context.Servicios.Where(c => c.ServiciosId == s.ServiciosId).FirstOrDefault().NombreS,
+                NombreUsuario = _context.Usuarios.Where(c => c.Id.Equals(UtilityModel.UserId.ToString())).FirstOrDefault().Nombre,
+                TipoFactura = s.TipoFactura
+
+            }).ToListAsync());
+
+            if (TempData["FacturaType"] == "Productos")
+            {
+                TempData["FacturaType"] = "Servicios";
+            }
+            else
+            {
+                TempData["FacturaType"] = "Productos";
+            }
+
+            //if (result.Count>0)
+            //{
+            return View(result);
+
+            //}
+            //else{
+            //    return View(new List<FacturaVM>());
+            //}
+
+        }
         // GET: Reportes/Edit/5
         public ActionResult Edit(int id)
         {

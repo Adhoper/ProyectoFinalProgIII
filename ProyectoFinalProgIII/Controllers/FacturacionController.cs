@@ -26,7 +26,7 @@ namespace ProyectoFinalProgIII.Controllers
         // GET: Facturacion
         public async Task<IActionResult> Index()
         {
-            var result = (await _context.Facturacion.Where(f => f.UsuarioId == Models.UtilityModel.UserId).Select(s => new FacturaListVM
+            var result = (await _context.Facturacion.Where(f => f.UsuarioId == UtilityModel.UserId).Select(s => new FacturaListVM
             {
                 Cantidad = s.Cantidad,
                 FacturacionId = s.FacturacionId,
@@ -39,14 +39,7 @@ namespace ProyectoFinalProgIII.Controllers
 
             }).ToListAsync());
 
-            if (TempData["FacturaType"] == "Productos")
-            {
-                TempData["FacturaType"] = "Servicios";
-            }
-            else
-            {
-                TempData["FacturaType"] = "Productos";
-            }
+
 
             //if (result.Count>0)
             //{
@@ -59,7 +52,7 @@ namespace ProyectoFinalProgIII.Controllers
 
         }
 
-        public IActionResult ChangeFacturaType([Bind("FacturacionId,TipoFactura,Cantidad,Itbis,ClienteId,UsuarioId,ProductosId,ServiciosId")] Facturacion facturacion)
+        /*public IActionResult ChangeFacturaType([Bind("FacturacionId,TipoFactura,Cantidad,Itbis,ClienteId,UsuarioId,ProductosId,ServiciosId")] Facturacion facturacion)
         {
             
 
@@ -73,7 +66,7 @@ namespace ProyectoFinalProgIII.Controllers
 
 
             return RedirectToAction("Create", result);
-        }
+        }*/
 
         // GET: Facturacion/Details/5
         public async Task<IActionResult> Details(Guid? id)
@@ -132,27 +125,20 @@ namespace ProyectoFinalProgIII.Controllers
                 return NotFound();
             }
 
-            return new ViewAsPdf("PDF", facturacion)
-            {
-                PageSize = Rotativa.AspNetCore.Options.Size.Legal
-            };
+            return new ViewAsPdf("PDF", facturacion);
         }
 
         // GET: Facturacion/Create
-        public IActionResult Create(FacturaVM fvm)
+        public IActionResult Create()
         {
             var result = new FacturaVM
             {
                 Productos = _context.Productos.ToList(),
                 Clientes = _context.Clientes.ToList(),
                 Servicios = _context.Servicios.ToList(),
-                Facturacion = fvm.Facturacion,
+                Facturacion = new Facturacion()
             };
-            if(result.Facturacion == null)
-            {
-                result.Facturacion = new Facturacion();
-                result.Facturacion.TipoFactura = "Productos";
-            }
+
             return View(result);
         }
 
